@@ -1,0 +1,54 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+
+int ans=INT_MAX/2,n;
+int dp[200][200][200];
+int distance(int sx,int sy,int tx,int ty){
+    return abs(sx-tx)+abs(sy-ty);
+}
+int dfs(int sx,int sy,int tx,int ty,int **w,int mask){
+   
+    if(dp[sx][sy][mask]!=-1){
+        return dp[sx][sy][mask];
+    }
+     int mini=distance(sx,sy,tx,ty),way2,way3;
+    
+    for(int j=0;j<n;j++){
+        if((mask&(1<<j))==0){
+            mask=(mask|(1<<j));
+            //lowerend
+           
+            way2=distance(sx,sy,w[j][0],w[j][1])+w[j][4]+dfs(w[j][2],w[j][3],tx,ty,w,mask);
+            way3=distance(sx,sy,w[j][2],w[j][3])+w[j][4]+dfs(w[j][0],w[j][1],tx,ty,w,mask);
+            mini=min({way2,way3,mini});
+            mask=(mask^(1<<j));
+        }
+    }
+    return dp[sx][sy][mask]=mini;
+}
+
+
+int main() {
+    int t;
+    cin>>t;
+    
+    while(t--){
+        
+        cin>>n;
+        int sx,sy,tx,ty;
+        cin>>sx>>sy>>tx>>ty;
+        int **w;
+        w=new  int*[n];
+        for(int j=0;j<n;j++){
+            w[j]=new int[5];
+        }
+        int mask=pow(2,n)-1;
+        for(int j=0;j<n;j++){
+            cin>>w[j][0]>>w[j][1]>>w[j][2]>>w[j][3]>>w[j][4];
+        }
+        memset(dp,-1,sizeof(dp));
+        cout<<dfs(sx,sy,tx,ty,w,0)<<endl;
+        
+    }
+}
