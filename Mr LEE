@@ -1,0 +1,56 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int n;
+int dp[12][(1<<11)-1];
+int dfs(int node,int mask,int **grid){
+    
+    if(mask==pow(2,n-1)-1){
+        return grid[node][0];
+    }
+    if(dp[node][mask]!=-1){
+        return dp[node][mask];
+    }
+    int mini=INT_MAX/2;
+    for(int j=1;j<n;j++){
+        if((mask&(1<<(j-1)))==0){
+            mask=mask|(1<<(j-1));
+            
+            mini=min(mini,grid[node][j]+dfs(j,mask,grid));
+            mask=mask^(1<<(j-1));
+        }
+    }
+    return dp[node][mask]=mini;
+    
+}
+int main() {
+    int t;
+    cin>>t;
+    while(t--){
+    cin>>n;
+    
+    int **grid;
+    grid=new int*[n];
+    for(int j=0;j<n;j++){
+        grid[j]=new int[n];
+    }
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            cin>>grid[i][j];
+            if(grid[i][j]==0){
+                grid[i][j]=1e9;
+            }
+        }
+    }
+        memset(dp,-1,sizeof(dp));
+        if(dfs(0,0,grid)==1e9){
+            cout<<"-1"<<endl;
+        }
+        else{
+            cout<<dfs(0,0,grid)<<endl;
+        }
+        
+        
+    }    
+    
+}
