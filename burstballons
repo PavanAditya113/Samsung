@@ -1,0 +1,45 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <bits/stdc++.h>
+using namespace std;
+
+int nums[100];
+int n;
+int dp[100][100];
+int helper(int i,int j){
+    if(i>j){
+        return 0;
+    }
+    else if(dp[i][j]!=-1){
+        return dp[i][j];
+    }
+    else{
+        int ans=0;
+        for(int k=i;k<=j;k++){
+            if(i==1&&j==n){
+                ans=max(ans,nums[k]+helper(i,k-1)+helper(k+1,j));
+            }
+            else{
+                ans=max(ans,nums[i-1]*nums[j+1]+helper(i,k-1)+helper(k+1,j));
+            }
+        }
+        return dp[i][j]=ans;
+    }
+    return 0;
+}
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */  
+    cin>>n;
+    nums[0]=1;
+    for(int j=1;j<=n;j++){
+        cin>>nums[j];
+    }
+    nums[n+1]=1;
+    memset(dp,-1,sizeof(dp));
+    cout<<helper(1,n);
+    
+    return 0;
+}
