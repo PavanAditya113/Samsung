@@ -1,0 +1,60 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+using namespace std;
+
+int arr[50][50];
+int m, n;
+
+bool valid(int x, int y) {
+    return x >= 0 && x < m && y >= 0 && y < n && arr[x][y] != 0;
+}
+
+int main() {
+    cin >> m >> n;
+    for (int j = 0; j < m; j++) {
+        for (int k = 0; k < n; k++) {
+            cin >> arr[j][k];
+        }
+    }
+
+    priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> pq;
+    pq.push({0, m - 1, 0});
+    vector<vector<bool>> visited(m, vector<bool>(n, false));
+    
+    while (!pq.empty()) {
+        vector<int> temp = pq.top();
+        pq.pop();
+
+        int a = temp[0], x = temp[1], y = temp[2];
+
+        if (arr[x][y] == 3) {
+            cout << a;
+            return 0;
+        }
+
+        if (visited[x][y]) continue;
+        visited[x][y] = true;
+
+        if (valid(x, y - 1) && !visited[x][y - 1]) pq.push({a, x, y - 1});
+        if (valid(x, y + 1) && !visited[x][y + 1]) pq.push({a, x, y + 1});
+
+        for (int j = x - 1; j >= 0; j--) {
+            if (arr[j][y] != 0) {
+                pq.push({max(a, abs(x - j)), j, y});
+                break;
+            }
+        }
+
+        for (int j = x + 1; j < m; j++) {
+            if (arr[j][y] != 0) {
+                pq.push({max(a, abs(x - j)), j, y});
+                break;
+            }
+        }
+    }
+
+    return 0;
+}
