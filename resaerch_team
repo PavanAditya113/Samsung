@@ -1,0 +1,81 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+
+bool valid(int x,int y,int n){
+    if(x<=0||x>n||y<=0||y>n){
+        return false;
+    }
+    return true;
+}
+int main() {
+    int t;
+    cin>>t;
+    while(t--){
+        int n,k;
+        cin>>n>>k;
+        int dest[k+1][2];
+        for(int j=1;j<=k;j++){
+            cin>>dest[j][0]>>dest[j][1];
+        }
+        int arr[n+1][n+1];
+        int dist[n+1][n+1];
+        for(int j=1;j<=n;j++){
+            for(int k=1;k<=n;k++){
+                dist[j][k]=0;
+            }
+        }
+        int visited[n+1][n+1];
+        memset(visited,-1,sizeof(visited));
+        
+        for(int i=1;i<=n;i++){
+            for(int j=1;j<=n;j++){
+                cin>>arr[i][j];
+            }
+        }
+        
+        
+       
+        int dir[4][2]={{-1,0},{1,0},{0,-1},{0,1}};
+        for(int j=1;j<=k;j++){
+            int sp=dest[j][0],ep=dest[j][1];
+            queue<vector<int>>q;
+            memset(visited,-1,sizeof(visited));
+            q.push({sp,ep,0});
+            visited[sp][ep]=1;
+        while(q.size()){
+            vector<int> temp=q.front();
+            int x=temp[0];
+            int y=temp[1];
+            // cout<<x<<" "<<y<<endl;
+            int dis=temp[2];
+            if(dist[x][y]<dis){
+                dist[x][y]=dis;
+            }
+            q.pop();
+            int nx,ny;
+            for(int j=0;j<4;j++){
+                nx=x+dir[j][0];
+                ny=y+dir[j][1];
+                if(valid(nx,ny,n)  && arr[nx][ny]==1 && visited[nx][ny]==-1){
+                    q.push({nx,ny,dis+1});
+                    visited[nx][ny]=1;
+                }
+            }
+            
+        }
+        
+      }
+        int mini=1e9;
+        for(int j=1;j<=n;j++){
+            for(int k=1;k<=n;k++){
+                if(dist[j][k])
+                {
+                    mini=min(dist[j][k],mini);
+                }
+            }
+        }
+        cout<<mini<<endl;
+  }
+    
+}
