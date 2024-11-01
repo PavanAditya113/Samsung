@@ -1,0 +1,41 @@
+#include<bits/stdc++.h>
+using namespace std;
+int k;
+int tot_cpu,tot_memchips,tot_board,s_cpu,s_memchips;
+int sp[100],cp[100],mc[100],bd[100];
+int dp[8][101][101][101][4];
+int dfs(int ind,int cpu,int memchips,int board,int cnt){
+    if(cnt>3){
+        return  INT_MIN/2;
+    }
+    if(ind==k){
+        return cpu*s_cpu+memchips*s_memchips;
+    }    
+    if(dp[ind][cpu][memchips][board][cnt]!=-1){
+        return dp[ind][cpu][memchips][board][cnt];
+    }
+    int pick=0;
+    for(int j=1;j<=100;j++){
+        if(cpu-j*cp[ind]<0||memchips-j*mc[ind]<0||board-j*bd[ind]<0){
+            break;
+        }
+        int price=j*sp[ind]+dfs(ind+1,cpu-j*cp[ind],memchips-j*mc[ind],board-j*bd[ind],cnt+1);
+        pick=max(price,pick);
+    }
+    int nopick=dfs(ind+1,cpu,memchips,board,cnt);
+    return dp[ind][cpu][memchips][board][cnt]=max({pick,nopick});
+}
+int main() {
+  int t;
+  cin>>t;
+  while(t--){
+      cin>>tot_cpu>>tot_memchips>>tot_board>>s_cpu>>s_memchips;
+      cin>>k;
+      
+      for(int j=0;j<k;j++){
+          cin>>cp[j]>>mc[j]>>bd[j]>>sp[j];
+      }
+      memset(dp,-1,sizeof(dp));
+      cout<<dfs(0,tot_cpu,tot_memchips,tot_board,0)<<endl;
+  }  
+}
