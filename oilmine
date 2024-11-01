@@ -1,0 +1,70 @@
+#include<bits/stdc++.h>
+using namespace std;
+int mini=INT_MAX,maxi=0;
+int aa=INT_MAX;
+bool check(int mid,int part,vector<int>&nums){
+        int sum=0,count=1;
+        mini=INT_MAX,maxi=0;
+        for(int j=0;j<nums.size();j++){
+            sum+=nums[j];
+            if(sum>mid){
+                mini=min(sum-nums[j],mini);
+                maxi=max(sum-nums[j],maxi);
+                count++;
+                sum=nums[j];
+            }
+        }
+    mini=min(sum,mini);
+    maxi=max(sum,maxi);
+       
+        if(count>part){
+            return false;
+        }
+        if(count==part){
+            aa=min(maxi-mini,aa);
+        }
+        return true;
+}
+int splitArray(vector<int>& nums, int k) {
+        int mini=*(max_element(nums.begin(),nums.end()));
+        int sum=accumulate(nums.begin(),nums.end(),0);
+        int lo=mini,hi=sum,mid;
+        
+        int ans=-1;
+        while(lo<=hi){
+            mid=lo+(hi-lo)/2;
+            if(check(mid,k,nums)){
+                ans=mid;
+                
+                hi=mid-1;
+            }
+            else{
+                lo=mid+1;
+            }
+        }
+       
+        return ans;
+}
+int main() {
+  int t;
+  cin>>t;
+  while(t--){
+      int m,n;
+      cin>>m>>n;
+      vector<int>v(n,0);
+      for(int j=0;j<n;j++){
+          cin>>v[j];
+      }
+      int k=splitArray(v,m);
+      // cout<<k<<" ";
+      for(int j=1;j<n;j++){
+          int kk=*(v.begin());
+          v.erase(v.begin());
+          v.push_back(kk);
+          k=splitArray(v,m);
+          // cout<<k<<" ";
+      }
+      cout<<aa<<endl;
+      
+  }  
+}
